@@ -50,7 +50,7 @@ class DossierController extends Controller
         $validated['user_id'] = $this->userId();
         $dossier = Dossier::create($validated);
 
-        if ($request->has('costs')) {
+        if ($request->has('costs') && is_array($request->costs)) {
             foreach ($request->costs as $coutId => $montant) {
                 CoutDossier::create([
                     'dossier_id' => $dossier->id,
@@ -60,7 +60,7 @@ class DossierController extends Controller
             }
         }
 
-        if ($request->has('produits')) {
+        if ($request->has('produits') && is_array($request->produits)) {
             foreach ($request->produits as $p) {
                 Produit::create([
                     'dossier_id' => $dossier->id,
@@ -119,7 +119,7 @@ class DossierController extends Controller
         $dossier->update($validated);
 
         CoutDossier::where('dossier_id', $dossier->id)->delete();
-        if ($request->has('costs')) {
+        if ($request->has('costs') && is_array($request->costs)) {
             foreach ($request->costs as $coutId => $montant) {
                 CoutDossier::create([
                     'dossier_id' => $dossier->id,
@@ -130,7 +130,7 @@ class DossierController extends Controller
         }
 
         Produit::where('dossier_id', $dossier->id)->delete();
-        if ($request->has('produits')) {
+        if ($request->has('produits') && is_array($request->produits)) {
             foreach ($request->produits as $p) {
                 Produit::create([
                     'dossier_id' => $dossier->id,
