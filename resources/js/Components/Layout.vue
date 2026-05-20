@@ -3,17 +3,20 @@ import { ref, onMounted } from 'vue';
 import { router, usePage } from '@inertiajs/vue3';
 
 const tabs = [
-    { key: 'saisie', label: 'Saisie' },
-    { key: 'analyse', label: '📊 Analyse' },
-    { key: 'dossiers', label: '🗂 Dossiers' },
-    { key: 'statistiques', label: '📈 Statistiques' },
-    { key: 'produits', label: '📦 Par Produit' },
-    { key: 'fournisseurs', label: '🏭 Par Fournisseur' },
-    { key: 'parametres', label: '⚙️ Paramètres' },
-    { key: 'export', label: '📥 Export CSV' },
+    { route: 'saisie',       match: 'saisie',       label: 'Saisie' },
+    { route: 'analyse',      match: 'analyse',      label: '📊 Analyse' },
+    { route: 'dossiers.index', match: 'dossiers',   label: '🗂 Dossiers' },
+    { route: 'statistiques', match: 'statistiques', label: '📈 Statistiques' },
+    { route: 'produits',     match: 'produits',     label: '📦 Par Produit' },
+    { route: 'fournisseurs', match: 'fournisseurs', label: '🏭 Par Fournisseur' },
+    { route: 'parametres',   match: 'parametres',   label: '⚙️ Paramètres' },
+    { route: 'export',       match: 'export',       label: '📥 Export CSV' },
 ];
 
-function switchTab(tab) { router.get(route(tab)); }
+const page = usePage();
+
+function switchTab(tab) { router.get(route(tab.route)); }
+function isActive(tab) { return page.component && page.component.toLowerCase().includes(tab.match); }
 
 const userProfile = ref(null);
 
@@ -49,10 +52,10 @@ function forgetProfile() {
                 <span class="text-[10px] text-white/60 block mt-px tracking-wider">ENCG.BM PFE</span>
             </div>
             <div class="flex gap-0.5 bg-white/15 rounded-[10px] p-0.5 border border-white/25">
-                <button v-for="tab in tabs" :key="tab.key" @click="switchTab(tab.key)"
+                <button v-for="tab in tabs" :key="tab.route" @click="switchTab(tab)"
                     class="px-4 py-1.5 rounded-md border-none bg-transparent text-white/70 font-sans text-xs font-medium cursor-pointer transition-all duration-200"
-                    :class="tab.key === 'export' ? '!bg-[rgba(0,200,159,0.2)] !text-white !border !border-[rgba(0,200,159,0.4)]' : ''"
-                    :style="$page.component && $page.component.toLowerCase().includes(tab.key) ? 'background:rgba(255,255,255,0.25);color:#fff;font-weight:700' : ''">
+                    :class="tab.route === 'export' ? '!bg-[rgba(0,200,159,0.2)] !text-white !border !border-[rgba(0,200,159,0.4)]' : ''"
+                    :style="isActive(tab) ? 'background:rgba(255,255,255,0.25);color:#fff;font-weight:700' : ''">
                     {{ tab.label }}
                 </button>
             </div>
