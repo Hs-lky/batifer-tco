@@ -65,14 +65,28 @@ watch(() => form.incoterm, (val) => {
 // ─── Save handler ───────────────────────────────────────────────────────
 function handleSave() {
     const payload = {
-        num_dossier: numDossier.value,
-        fournisseur: fournisseur.value,
-        ...form,
-        quantite: quantite.value,
+        ref: numDossier.value,
+        frs: fournisseur.value,
+        pays: form.pays,
+        incoterm: form.incoterm,
+        famille: form.famille,
+        devise: form.devise,
         unite: unite.value,
-        observations: observations.value,
+        cert_origine: form.certOrigine,
+        px_devise: form.px_devise,
+        taux: form.taux,
+        qte: quantite.value,
+        notes: observations.value,
+        fret_montant_orig: form.fret_montant,
+        fret_devise_orig: form.fret_devise,
+        fret_taux_orig: form.fret_taux,
         costs: { ...costInputs },
-        produits: produits.value.length > 0 ? produits.value : null,
+        produits: produits.value.length > 0 ? produits.value.map(p => ({
+            desc: p.description,
+            qte: p.quantite,
+            unite: p.unite,
+            ratio: p.ratio / 100,
+        })) : null,
     };
     router.post('/dossiers', payload, {
         onSuccess: () => {
